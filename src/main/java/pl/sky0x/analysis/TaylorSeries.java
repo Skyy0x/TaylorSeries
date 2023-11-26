@@ -22,7 +22,11 @@ public final class TaylorSeries {
      * @return The approximation of the function at the specified point x.
      */
     public double taylorSeriesApproximation(Function<BigDecimal, BigDecimal> function, double x, int precision) {
-        final BigDecimal a = new BigDecimal((double) Math.round(x));
+        if (precision < 0) {
+            throw new IllegalArgumentException("Precision must be a non-negative integer.");
+        }
+
+        final BigDecimal a = BigDecimal.valueOf((double) Math.round(x));
         final BigDecimal dx = new BigDecimal(x).subtract(a);
 
         double summation = 0;
@@ -35,7 +39,7 @@ public final class TaylorSeries {
             }
             // Update the summation with the current term.
             summation += lastDerivative.apply(a)
-                    .multiply(new BigDecimal(Math.pow(dx.doubleValue(), i) / factorial(i)))
+                    .multiply(BigDecimal.valueOf(Math.pow(dx.doubleValue(), i) / factorial(i)))
                     .doubleValue();
         }
         return summation;
